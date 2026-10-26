@@ -30,7 +30,6 @@ $$Z = \\frac{A_p\\, \\bar S_p}{C_i A_i\\, a_0}$$
 
 Volumetric efficiency drops sharply once $Z$ exceeds about 0.6.` }
 };
-const TOC = [["6.2","6.2 Volumetric Efficiency",false],["6.2.1","6.2.1 Quasi-Static Effects",true],["6.2.2","6.2.2 Intake and Exhaust Flow Resistances",true],["6.2.5","6.2.5 Airflow Choking at Intake Valve",true]];
 
 const SYSTEM = `You write concise textbook sections for engineering students. Default domain: internal combustion engines, thermodynamics, and fluid mechanics, unless the question is clearly about something else.
 Format: Markdown. Start with a single "# " heading naming the topic (no section number). Then a line "Tags: a, b, c" with 3-5 short topic tags. Then explanatory prose, optional "## " subsections, bullet lists where helpful, and equations in LaTeX ($...$ inline, $$...$$ display). Define every symbol. Show worked steps for numeric problems.
@@ -58,30 +57,38 @@ function renderMd(md) {
   });
 }
 function show({ title, tags, md, label }) {
+  const body = renderMd(md);
+  const answer = label
+    ? `<section class="ai-block"><div class="label">${esc(label)}</div><h2>${esc(title)}</h2>${body}</section>`
+    : `<h1>${esc(title.toUpperCase())}</h1>${body}`;
+  const ctx = c => `<section class="context"><h2>${esc(c.heading)}</h2>${renderMd(c.md)}</section>`;
   page.innerHTML =
     `<div class="related">Topics related to this chapter</div>
      <div class="tags">${tags.map(t => `<a href="#">${esc(t)}</a>`).join("<span>|</span>")}</div>
-     ${label ? `<div class="label">${esc(label)}</div>` : ""}
-     <h1>${esc(title.toUpperCase())}</h1>${renderMd(md)}`;
+     ${label ? ctx(CONTEXT_BEFORE) + answer + ctx(CONTEXT_AFTER) : answer}`;
   $("#scroll").scrollTop = 0;
   $("#crumb-b").textContent = title + " \u203A";
+  const ch = /^\d+/.exec(title) && CHAPTER(title.split(/\s/)[0]);
+  if (ch) $("#crumb-a").textContent = "\u2039 Ch. " + ch[1];
 }
 
 // --- TOC
 let tempCount = 0;
 function buildToc() {
-  $("#toc").innerHTML = TOC.map(([id, t, sub]) => `<a href="#" data-id="${id}" class="${sub ? "sub" : ""}">${esc(t)}</a>`).join("");
+  $("#toc").innerHTML = TOC.map(([id, t, sub]) => `<a href="#" data-id="${id}" class="${sub ? "sub" + (id.split(".").length > 2 ? " sub2" : "") : "chap"}">${esc(t)}</a>`).join("");
 }
 function activate(el) { document.querySelectorAll("#toc a").forEach(a => a.classList.toggle("active", a === el)); }
 $("#toc").addEventListener("click", e => {
   const a = e.target.closest("a"); if (!a) return; e.preventDefault(); activate(a);
-  const s = SECTIONS[a.dataset.id] || answers[a.dataset.id]; if (s) show(s);
+  const s = SECTIONS[a.dataset.id] || answers[a.dataset.id] || stub(a.dataset.id); if (s) show(s);
 });
 const answers = {};
 function addTemp(sec) {
   const id = "ans" + (++tempCount); answers[id] = sec;
   const a = document.createElement("a"); a.href = "#"; a.dataset.id = id; a.className = "sub temp"; a.textContent = sec.title;
-  $("#toc").appendChild(a); activate(a);
+  let list = $("#toc .temp-head");
+  if (!list) { list = document.createElement("div"); list.className = "temp-head"; list.textContent = "Your AI study notes"; $("#toc").prepend(list); }
+  list.after(a); activate(a); a.scrollIntoView({ block: "nearest" });
 }
 
 // --- search / ask
@@ -98,8 +105,8 @@ async function ask(question) {
   const { base, model, key } = cfg();
   if (!key) {
     show({ title: "Search", tags: ["Settings"], md:
-      `To answer questions here, add an API key first.\n\n1. Click the **⋮** button in the toolbar.\n2. Paste an OpenAI-compatible API key (and change the base URL / model if needed).\n3. Click **Save**, then search again.` });
-    page.querySelector("h1").insertAdjacentHTML("afterend", `<p class="notice">No API key is set for this browser.</p>`);
+      `To answer questions here, add an API key first.\n\n1. Get a key: **OpenAI** at [platform.openai.com/api-keys](https://platform.openai.com/api-keys) (sign in → *Create new secret key*, requires a small prepaid credit), or a free-tier key from **Groq** ([console.groq.com/keys](https://console.groq.com/keys)) or **OpenRouter** ([openrouter.ai/keys](https://openrouter.ai/keys)).\n2. Click the **⋮** button in the toolbar, paste the key, and set the matching base URL and model.\n3. Click **Save**, then search again.` });
+    page.querySelector("h1, h2").insertAdjacentHTML("afterend", `<p class="notice">No API key is set for this browser.</p>`);
     return;
   }
   busy = true;
@@ -143,4 +150,4 @@ $("#fs").onclick = () => document.fullscreenElement ? document.exitFullscreen() 
 $("#print").onclick = () => window.print();
 if (innerWidth < 900) document.body.classList.add("collapsed");
 
-buildToc(); activate(document.querySelector("#toc a")); show(SECTIONS["6.2"]);
+buildToc(); activate(document.querySelector('#toc a[data-id="6.2"]')); show(SECTIONS["6.2"]);
