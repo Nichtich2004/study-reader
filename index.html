@@ -40,14 +40,19 @@
     <h3>Settings</h3>
     <label>API base URL<input id="s-base"></label>
     <label>Model<input id="s-model"></label>
-    <label>API key<input id="s-key" type="password" placeholder="sk-…"></label>
+    <div id="presets" class="presets">
+      <button type="button" data-preset="gemini">Use Gemini</button>
+      <button type="button" data-preset="groq">Use Groq</button>
+      <button type="button" data-preset="openai">Use OpenAI</button>
+    </div>
+    <label>API key<input id="s-key" type="password" placeholder="API key"></label>
     <div class="help">
       <b>Where do I get a key?</b>
       <ul style="margin:8px 0 0;padding-left:18px;font-weight:400;font-size:12px;line-height:1.45;color:#444">
-        <li><b>Gemini</b> (often free tier) — get a key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. Base URL <code>https://generativelanguage.googleapis.com/v1beta/openai/</code>, model e.g. <code>gemini-2.0-flash</code>.</li>
+        <li><b>Gemini</b> (often free tier) — get a key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. Base URL <code>https://generativelanguage.googleapis.com/v1beta/openai/</code>, model e.g. <code>gemini-3.8-flash</code>.</li>
         <li><b>Groq</b> (free tier) — <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>. Base URL <code>https://api.groq.com/openai/v1</code>, model e.g. <code>llama-3.3-70b-versatile</code>.</li>
         <li><b>OpenAI</b> — <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a> (needs prepaid credit). Base URL <code>https://api.openai.com/v1</code>, model <code>gpt-4o-mini</code>.</li>
-        <li><b>OpenRouter</b> — <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>. Base URL <code>https://openrouter.ai/api/v1</code>, model e.g. <code>google/gemini-2.0-flash-exp:free</code>.</li>
+        <li><b>OpenRouter</b> — <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>. Base URL <code>https://openrouter.ai/api/v1</code>, model e.g. <code>google/gemini-3.8-flash-exp:free</code>.</li>
       </ul>
     </div>
     <p class="note">Stored in this browser's localStorage only. It is sent only to the API base URL above. Never share or commit your key.</p>

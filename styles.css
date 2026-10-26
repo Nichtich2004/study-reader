@@ -65,3 +65,7 @@ main{flex:1;display:flex;flex-direction:column;min-width:0}
 .row .navy{border:0}
 @media (max-width:900px){#sidebar{position:fixed;z-index:5;height:100%}#page{padding:20px 22px}body:not(.collapsed) main{opacity:.4}}
 @media print{#sidebar,#toolbar{display:none}#page{padding:0}}
+
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.presets button{padding:6px 10px;border:1px solid #ccc;background:#f7f7f7;border-radius:3px;font-size:12px;font-weight:600}
+.presets button:hover{background:#eef3f9;border-color:#1f5fa8;color:#1f5fa8}

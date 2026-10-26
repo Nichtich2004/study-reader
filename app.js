@@ -122,7 +122,10 @@ async function ask(question) {
       body: JSON.stringify({ model, temperature: 0.3, messages: [{ role: "system", content: SYSTEM }, { role: "user", content: question }] })
     });
     const j = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(j.error?.message || `HTTP ${r.status}`);
+    if (!r.ok) {
+      const detail = j.error?.message || j.message || (typeof j.error === "string" ? j.error : "") || JSON.stringify(j).slice(0, 200);
+      throw new Error((detail ? detail + " — " : "") + `HTTP ${r.status}`);
+    }
     let md = j.choices?.[0]?.message?.content || "";
     let title = question, tags = ["Study notes"];
     md = md.replace(/^\s*#\s+(.+)\n/, (_, t) => { title = t.trim(); return ""; });
@@ -136,7 +139,20 @@ async function ask(question) {
 }
 
 // --- settings modal
+const PRESETS = {
+  gemini: { base: "https://generativelanguage.googleapis.com/v1beta/openai/", model: "gemini-3.8-flash" },
+  groq: { base: "https://api.groq.com/openai/v1", model: "llama-3.3-70b-versatile" },
+  openai: { base: "https://api.openai.com/v1", model: "gpt-4o-mini" }
+};
 const modal = $("#modal");
+document.querySelectorAll("#presets [data-preset]").forEach(btn => {
+  btn.onclick = () => {
+    const p = PRESETS[btn.dataset.preset];
+    if (!p) return;
+    $("#s-base").value = p.base;
+    $("#s-model").value = p.model;
+  };
+});
 $("#menu").onclick = () => { const c = cfg(); $("#s-base").value = c.base; $("#s-model").value = c.model; $("#s-key").value = c.key; modal.hidden = false; };
 $("#s-cancel").onclick = () => modal.hidden = true;
 $("#s-clear").onclick = () => { localStorage.removeItem("sr_key"); $("#s-key").value = ""; };
