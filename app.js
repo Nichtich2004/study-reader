@@ -116,14 +116,23 @@ async function ask(question) {
   busy = true;
   page.innerHTML = `<p class="muted">Retrieving section…</p><div class="skel">${"<div></div>".repeat(3)}<div style="width:60%"></div>${"<div></div>".repeat(4)}<div style="width:40%"></div></div>`;
   try {
-    const r = await fetch(base.replace(/\/+$/, "") + "/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: "Bearer " + key },
-      body: JSON.stringify({ model, temperature: 0.3, messages: [{ role: "system", content: SYSTEM }, { role: "user", content: question }] })
-    });
-    const j = await r.json().catch(() => ({}));
+    const url = base.replace(/\/+$/, "") + "/chat/completions";
+    const body = JSON.stringify({ model, temperature: 0.3, messages: [{ role: "system", content: SYSTEM }, { role: "user", content: question }] });
+    let r, j;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + key }, body });
+      j = await r.json().catch(() => ({}));
+      if (r.ok) break;
+      if ((r.status === 503 || r.status === 429) && attempt < 2) {
+        page.querySelector(".muted").textContent = `Model busy — retrying (${attempt + 2}/3)…`;
+        await new Promise(res => setTimeout(res, 1500 * (attempt + 1)));
+        continue;
+      }
+      const detail = j.error?.message || j.message || (typeof j.error === "string" ? j.error : "") || (Array.isArray(j) && j[0]?.error?.message) || JSON.stringify(j).slice(0, 200);
+      throw new Error((detail ? detail + " — " : "") + `HTTP ${r.status}`);
+    }
     if (!r.ok) {
-      const detail = j.error?.message || j.message || (typeof j.error === "string" ? j.error : "") || JSON.stringify(j).slice(0, 200);
+      const detail = j.error?.message || j.message || JSON.stringify(j).slice(0, 200);
       throw new Error((detail ? detail + " — " : "") + `HTTP ${r.status}`);
     }
     let md = j.choices?.[0]?.message?.content || "";
