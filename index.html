@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study Reader · AI Study Notes</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<aside id="sidebar">
+  <div class="book">
+    <img src="cover.svg" alt="" class="cover">
+    <div>
+      <div class="book-title">Study Reader</div>
+      <div class="book-sub">Engineering study notes</div>
+    </div>
+  </div>
+  <nav id="toc"></nav>
+</aside>
+<main>
+  <div id="toolbar">
+    <button class="red-sq" id="collapse" title="Toggle contents">&#x2039;</button>
+    <span class="crumb" id="crumb-a">&#x2039; Ch. 6 Intake and Exhaust</span>
+    <span class="sep">|</span>
+    <span class="crumb" id="crumb-b">Your notes &#x203A;</span>
+    <div id="search-wrap">
+      <input id="q" type="search" placeholder="Ask a study question…" autocomplete="off">
+      <button class="red-sq" id="search-btn" title="Ask">&#x1F50D;&#xFE0E;</button>
+    </div>
+    <button class="icon" id="fs" title="Fullscreen">&#x26F6;</button>
+    <button class="icon" id="print" title="Print / PDF">&#x2399;</button>
+    <button class="icon" id="menu" title="Settings">&#x22EE;</button>
+  </div>
+  <div id="scroll"><article id="page"></article></div>
+</main>
+
+<div id="modal" hidden>
+  <div class="panel">
+    <h3>Settings</h3>
+    <label>API base URL<input id="s-base"></label>
+    <label>Model<input id="s-model"></label>
+    <label>API key<input id="s-key" type="password" placeholder="sk-…"></label>
+    <p class="note">Stored in this browser's localStorage only. It is sent only to the API base URL above.</p>
+    <div class="row"><button id="s-clear">Clear key</button><span></span><button id="s-cancel">Cancel</button><button class="navy" id="s-save">Save</button></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
