@@ -15,9 +15,10 @@ Click **⋮** in the toolbar, then paste an OpenAI-compatible key, base URL, and
 
 | Provider | Get a key | Base URL | Example model |
 |---|---|---|---|
-| OpenAI | https://platform.openai.com/api-keys (needs prepaid credit) | `https://api.openai.com/v1` | `gpt-4o-mini` |
+| Gemini (often free) | https://aistudio.google.com/apikey | `https://generativelanguage.googleapis.com/v1beta/openai/` | `gemini-2.0-flash` |
 | Groq (free tier) | https://console.groq.com/keys | `https://api.groq.com/openai/v1` | `llama-3.3-70b-versatile` |
-| OpenRouter | https://openrouter.ai/keys | `https://openrouter.ai/api/v1` | `openai/gpt-4o-mini` |
+| OpenAI | https://platform.openai.com/api-keys (needs prepaid credit) | `https://api.openai.com/v1` | `gpt-4o-mini` |
+| OpenRouter | https://openrouter.ai/keys | `https://openrouter.ai/api/v1` | `google/gemini-2.0-flash-exp:free` |
  The key stays in your browser's localStorage and is sent only to that API. Never commit a key to the repo.
 
 ## Notes

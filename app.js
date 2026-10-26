@@ -105,7 +105,11 @@ async function ask(question) {
   const { base, model, key } = cfg();
   if (!key) {
     show({ title: "Search", tags: ["Settings"], md:
-      `To answer questions here, add an API key first.\n\n1. Get a key: **OpenAI** at [platform.openai.com/api-keys](https://platform.openai.com/api-keys) (sign in → *Create new secret key*, requires a small prepaid credit), or a free-tier key from **Groq** ([console.groq.com/keys](https://console.groq.com/keys)) or **OpenRouter** ([openrouter.ai/keys](https://openrouter.ai/keys)).\n2. Click the **⋮** button in the toolbar, paste the key, and set the matching base URL and model.\n3. Click **Save**, then search again.` });
+      `To answer questions here, add an API key first.
+
+1. Get a key from **Gemini** ([aistudio.google.com/apikey](https://aistudio.google.com/apikey)), **Groq** ([console.groq.com/keys](https://console.groq.com/keys)), **OpenAI**, or **OpenRouter**.
+2. Click **⋮** Settings, paste the key, and set that provider's base URL and model (see the help box in Settings).
+3. Click **Save**, then search again.` });
     page.querySelector("h1, h2").insertAdjacentHTML("afterend", `<p class="notice">No API key is set for this browser.</p>`);
     return;
   }
